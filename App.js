@@ -14,6 +14,7 @@ export default function App() {
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [googleResponse, setGoogleResponse] = useState();
 
   useEffect(() => {
     (async () => {
@@ -101,16 +102,63 @@ export default function App() {
   };
 
 
+  const submitToGoogle = async () => {
+		try {
+      setUploading(true);
+			let body = JSON.stringify({
+				requests: [
+					{
+						features: [	
+							{ type: 'TEXT_DETECTION', maxResults: 5 },
+							{ type: 'DOCUMENT_TEXT_DETECTION', maxResults: 5 },
+						],
+						image: {
+							source: {
+								imageUri: image
+							}
+						}
+					}
+				]
+			});
+			let response = await fetch(
+				'https://vision.googleapis.com/v1/images:annotate?key=' +
+					'AIzaSyCxhxxxLUZmKrPayc-NDvprViJSbwOZHyY',
+				{
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					method: 'POST',
+					body: body
+				}
+			);
+			let responseJson = await response.json();
+			console.log(responseJson);
+      setUploading(false);
+      setGoogleResponse(responseJson);
+
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+
+
+
   return (
     <View style={styles.container}>
       <Image source={{uri:image}} style={{width: 300, height: 300}}/>
       <Button title="choose picture" onPress={pickImage}/>
       <Button title="take picture" onPress={takeImage}/>
       {!uploading? (
-      <Button title="upload" onPress={uploadImage}/>
+      <View>
+        <Button title="upload" onPress={uploadImage}/>
+        <Button title="upload to Google" onPress={submitToGoogle}/>
+      </View>
       ) : (
         <ActivityIndicator size="large" color="#000"/>
       )}
+
     </View>
   );
 }
