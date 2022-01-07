@@ -15,6 +15,7 @@ export default function App() {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState();
+  const [URL, setURL] = useState();
 
   useEffect(() => {
     (async () => {
@@ -94,6 +95,7 @@ export default function App() {
       snapshot.snapshot.ref.getDownloadURL().then((url) => {
         setUploading(false)
         console.log("download url", url);
+        setURL(url);
         blob.close();
         return url;
       });
@@ -104,6 +106,7 @@ export default function App() {
 
   const submitToGoogle = async () => {
 		try {
+      console.log("IMAGE: " ,image);
       setUploading(true);
 			let body = JSON.stringify({
 				requests: [
@@ -114,7 +117,7 @@ export default function App() {
 						],
 						image: {
 							source: {
-								imageUri: image
+								imageUri: URL
 							}
 						}
 					}
