@@ -112,8 +112,7 @@ export default function App() {
 				requests: [
 					{
 						features: [	
-							{ type: 'TEXT_DETECTION', maxResults: 5 },
-							{ type: 'DOCUMENT_TEXT_DETECTION', maxResults: 5 },
+							{ type: 'DOCUMENT_TEXT_DETECTION' },
 						],
 						image: {
 							source: {
@@ -136,6 +135,12 @@ export default function App() {
 				}
 			);
 			let responseJson = await response.json();
+      
+      //const fullTextAnnotation = responseJson[0].fullTextAnnotation;
+      //console.log("fullTextAnno: ", fullTextAnnotation)
+      const x = responseJson.responses[0].textAnnotations[0].description;
+      console.log("TESTINGX: ", x);
+
 			console.log(responseJson);
       setUploading(false);
       setGoogleResponse(responseJson);
@@ -155,7 +160,7 @@ export default function App() {
       <Button title="take picture" onPress={takeImage}/>
       {!uploading? (
       <View>
-        <Button title="upload" onPress={uploadImage}/>
+        <Button title="upload to Firebase" onPress={uploadImage}/>
         <Button title="upload to Google" onPress={submitToGoogle}/>
       </View>
       ) : (
