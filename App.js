@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Image, Platform, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, Button, Image, Platform, ActivityIndicator } from 'react-native';
 
 import * as Firebase from 'firebase';
 import * as ImagePicker from 'expo-image-picker';
@@ -40,7 +40,7 @@ export default function App() {
       quality: 1,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -56,7 +56,7 @@ export default function App() {
       quality: 1,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -94,7 +94,7 @@ export default function App() {
     () => {
       snapshot.snapshot.ref.getDownloadURL().then((url) => {
         setUploading(false)
-        console.log("download url", url);
+        //console.log("download url", url);
         setURL(url);
         blob.close();
         return url;
@@ -139,11 +139,11 @@ export default function App() {
       //const fullTextAnnotation = responseJson[0].fullTextAnnotation;
       //console.log("fullTextAnno: ", fullTextAnnotation)
       const x = responseJson.responses[0].textAnnotations[0].description;
-      console.log("TESTINGX: ", x);
+      //console.log("TESTINGX: ", x);
 
-			console.log(responseJson);
+			//console.log(responseJson);
       setUploading(false);
-      setGoogleResponse(responseJson);
+      setGoogleResponse(x);
 
 		} catch (error) {
 			console.log(error);
@@ -166,7 +166,12 @@ export default function App() {
       ) : (
         <ActivityIndicator size="large" color="#000"/>
       )}
-
+      <View style={{backgroundColor: 'red',}}>
+        <Text style={{color: 'white',}}>
+          {googleResponse}
+        </Text>
+      </View>
+        
     </View>
   );
 }
