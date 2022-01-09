@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Button, Image, Platform, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, Image, Platform, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as Firebase from 'firebase';
 import * as ImagePicker from 'expo-image-picker';
@@ -112,7 +113,7 @@ export default function App() {
 				requests: [
 					{
 						features: [	
-							{ type: 'DOCUMENT_TEXT_DETECTION' },
+							{ type: 'TEXT_DETECTION' },
 						],
 						image: {
 							source: {
@@ -138,6 +139,7 @@ export default function App() {
       
       //const fullTextAnnotation = responseJson[0].fullTextAnnotation;
       //console.log("fullTextAnno: ", fullTextAnnotation)
+      //processedResponse:
       const x = responseJson.responses[0].textAnnotations[0].description;
       //console.log("TESTINGX: ", x);
 
@@ -149,6 +151,15 @@ export default function App() {
 			console.log(error);
 		}
 	};
+
+  const EditReceiptText = (props) => {
+    return (
+      <TextInput
+        {...props}
+        editable
+      />
+    );
+  }
 
 
 
@@ -166,11 +177,20 @@ export default function App() {
       ) : (
         <ActivityIndicator size="large" color="#000"/>
       )}
-      <View style={{backgroundColor: 'red',}}>
-        <Text style={{color: 'white',}}>
-          {googleResponse}
-        </Text>
+
+      {googleResponse? (
+
+      <View style={styles.receiptOutput}>
+        {/* <TextInput style={styles.receiptOutput} value={googleResponse} onChangeText={setGoogleResponse} /> */}
+        <Text style={{fontWeight: 'bold', backgroundColor: '#D8D8D8'}}>Your Receipt:</Text>
+        <EditReceiptText 
+          multiline
+          onChangeText={setGoogleResponse}
+          value={googleResponse}
+          style={{marginLeft: 20, marginRight: 20}}
+        />
       </View>
+      ) : null }
         
     </View>
   );
@@ -182,5 +202,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  receiptOutput: {
+    borderWidth: 1,
+    borderColor: 'black',
+    backgroundColor: '#F7F7F7',
   },
 });
